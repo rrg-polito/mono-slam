@@ -1,2 +1,2 @@
-/Users/ludus/develop/rrg/mono-slam/build/CMakeFiles/main.dir
 /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles/monoslam.dir
+/Users/ludus/develop/rrg/mono-slam/build/CMakeFiles/test.dir

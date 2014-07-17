@@ -102,19 +102,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named main
-
-# Build rule for target.
-main: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 main
-.PHONY : main
-
-# fast build rule for target.
-main/fast:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
-.PHONY : main/fast
-
-#=============================================================================
 # Target rules for targets named monoslam
 
 # Build rule for target.
@@ -127,29 +114,42 @@ monoslam/fast:
 	$(MAKE) -f CMakeFiles/monoslam.dir/build.make CMakeFiles/monoslam.dir/build
 .PHONY : monoslam/fast
 
-examples/main.o: examples/main.cpp.o
-.PHONY : examples/main.o
+#=============================================================================
+# Target rules for targets named test
+
+# Build rule for target.
+test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test
+.PHONY : test
+
+# fast build rule for target.
+test/fast:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
+.PHONY : test/fast
+
+examples/test.o: examples/test.cpp.o
+.PHONY : examples/test.o
 
 # target to build an object file
-examples/main.cpp.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/examples/main.cpp.o
-.PHONY : examples/main.cpp.o
+examples/test.cpp.o:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/examples/test.cpp.o
+.PHONY : examples/test.cpp.o
 
-examples/main.i: examples/main.cpp.i
-.PHONY : examples/main.i
+examples/test.i: examples/test.cpp.i
+.PHONY : examples/test.i
 
 # target to preprocess a source file
-examples/main.cpp.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/examples/main.cpp.i
-.PHONY : examples/main.cpp.i
+examples/test.cpp.i:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/examples/test.cpp.i
+.PHONY : examples/test.cpp.i
 
-examples/main.s: examples/main.cpp.s
-.PHONY : examples/main.s
+examples/test.s: examples/test.cpp.s
+.PHONY : examples/test.s
 
 # target to generate assembly for a file
-examples/main.cpp.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/examples/main.cpp.s
-.PHONY : examples/main.cpp.s
+examples/test.cpp.s:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/examples/test.cpp.s
+.PHONY : examples/test.cpp.s
 
 lib/ConfigVSLAM.o: lib/ConfigVSLAM.cpp.o
 .PHONY : lib/ConfigVSLAM.o
@@ -302,12 +302,12 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
-	@echo "... main"
 	@echo "... monoslam"
 	@echo "... rebuild_cache"
-	@echo "... examples/main.o"
-	@echo "... examples/main.i"
-	@echo "... examples/main.s"
+	@echo "... test"
+	@echo "... examples/test.o"
+	@echo "... examples/test.i"
+	@echo "... examples/test.s"
 	@echo "... lib/ConfigVSLAM.o"
 	@echo "... lib/ConfigVSLAM.i"
 	@echo "... lib/ConfigVSLAM.s"

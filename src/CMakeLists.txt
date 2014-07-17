@@ -27,8 +27,8 @@ add_library(monoslam
 
 target_link_libraries (monoslam ${OpenCV_LIBS} ${LIBCONFIG_LIBRARY} /usr/local/lib/libconfig++.a)
 
-add_executable(main
-    examples/main.cpp
+add_executable(test
+    examples/test.cpp
     )
 
-target_link_libraries (main  monoslam ${OpenCV_LIBS} ${LIBCONFIG_LIBRARY} /usr/local/lib/libconfig++.a)
+target_link_libraries (test monoslam ${OpenCV_LIBS} ${LIBCONFIG_LIBRARY} /usr/local/lib/libconfig++.a)

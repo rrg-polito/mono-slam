@@ -56,48 +56,13 @@ CMAKE_SOURCE_DIR = /Users/ludus/develop/rrg/mono-slam/src
 CMAKE_BINARY_DIR = /Users/ludus/develop/rrg/mono-slam/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/main.dir
-
-# All Build rule for target.
-CMakeFiles/main.dir/all: CMakeFiles/monoslam.dir/all
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/depend
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles  1
-	@echo "Built target main"
-.PHONY : CMakeFiles/main.dir/all
-
-# Include target in all.
-all: CMakeFiles/main.dir/all
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/main.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles 7
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/main.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles 0
-.PHONY : CMakeFiles/main.dir/rule
-
-# Convenience name for target.
-main: CMakeFiles/main.dir/rule
-.PHONY : main
-
-# clean rule for target.
-CMakeFiles/main.dir/clean:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/clean
-.PHONY : CMakeFiles/main.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/main.dir/clean
-.PHONY : clean
-
-#=============================================================================
 # Target rules for target CMakeFiles/monoslam.dir
 
 # All Build rule for target.
 CMakeFiles/monoslam.dir/all:
 	$(MAKE) -f CMakeFiles/monoslam.dir/build.make CMakeFiles/monoslam.dir/depend
 	$(MAKE) -f CMakeFiles/monoslam.dir/build.make CMakeFiles/monoslam.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles  2 3 4 5 6 7
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles  1 2 3 4 5 6
 	@echo "Built target monoslam"
 .PHONY : CMakeFiles/monoslam.dir/all
 
@@ -123,6 +88,41 @@ CMakeFiles/monoslam.dir/clean:
 
 # clean rule for target.
 clean: CMakeFiles/monoslam.dir/clean
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test.dir
+
+# All Build rule for target.
+CMakeFiles/test.dir/all: CMakeFiles/monoslam.dir/all
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/depend
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles  7
+	@echo "Built target test"
+.PHONY : CMakeFiles/test.dir/all
+
+# Include target in all.
+all: CMakeFiles/test.dir/all
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles 7
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ludus/develop/rrg/mono-slam/build/CMakeFiles 0
+.PHONY : CMakeFiles/test.dir/rule
+
+# Convenience name for target.
+test: CMakeFiles/test.dir/rule
+.PHONY : test
+
+# clean rule for target.
+CMakeFiles/test.dir/clean:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/clean
+.PHONY : CMakeFiles/test.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/test.dir/clean
 .PHONY : clean
 
 #=============================================================================
