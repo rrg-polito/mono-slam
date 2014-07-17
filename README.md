@@ -17,3 +17,9 @@ rosrun mono-slam mono-slam configuration.cfg /image:=/your_image_topic
 ( configuration file contains parameters for the mono-slam algorithm 
   and camera calibration. 
   Sample configuration files are provided in the "conf" folder ) 
+
+
+
+
+for info contact
+    Ludovico Russo, ludovico.russo@polito.it
