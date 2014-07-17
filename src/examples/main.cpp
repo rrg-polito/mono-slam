@@ -19,10 +19,10 @@ int main(int argc, char** argv)
     
     
 	cv::Mat frame;
-	VSlamFilter slam("/Volumes/HD2/img/conf.cfg");
+	VSlamFilter slam("/Volumes/HD2/orientoma/img/conf.cfg");
     
     std::ifstream fimgs;
-    fimgs.open("/Volumes/HD2/img/data/d1/t.tex");
+    fimgs.open("/Volumes/HD2/orientoma/img/data/d1/t.tex");
     
 
     double old_time = 0;

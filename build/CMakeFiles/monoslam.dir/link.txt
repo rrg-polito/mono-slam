@@ -1,0 +1,2 @@
+/usr/bin/ar cr libmonoslam.a  CMakeFiles/monoslam.dir/lib/ConfigVSLAM.cpp.o CMakeFiles/monoslam.dir/lib/Patch.cpp.o CMakeFiles/monoslam.dir/lib/camModel.cpp.o CMakeFiles/monoslam.dir/lib/libblur.cpp.o CMakeFiles/monoslam.dir/lib/utils.cpp.o CMakeFiles/monoslam.dir/lib/vslamRansac.cpp.o
+/usr/bin/ranlib libmonoslam.a
