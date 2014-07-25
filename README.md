@@ -3,6 +3,11 @@ mono-slam
 
 MonoSLAM implementation in ROS
 
+This package is in beta version.
+
+
+
+
 
 Reference: Russo L.O., Rosa S., Bona B., Matteucci M., "A ROS IMPLEMENTATION OF THE MONO-SLAM ALGORITHM",
 International Journal of Computer Science & Information Technology, Vol. 6 Issue 1, p339

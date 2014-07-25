@@ -1,3 +1,11 @@
 Correcting CMakeLists for libconfig++
 Provide a good findLibConfig module
 Better examples
+
+
+ROS_TODO
+
+get camera parameter from ROS
+
+
+
