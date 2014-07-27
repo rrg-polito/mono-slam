@@ -5,7 +5,6 @@
 #include <eigen3/Eigen/Dense>
 
 
-
 typedef struct _camConfig_ {
     float fx, fy, u0,v0,k1,k2,k3,p1,p2;
 } camConfig;

@@ -1,6 +1,6 @@
 #include <opencv2/opencv.hpp>
 #include <ctime>
-#include "vslamRansac.hpp"
+#include <vslamRansac.hpp>
 #include <fstream>
 #include <string>
 
@@ -8,6 +8,7 @@
 
 int main(int argc, char** argv)
 {
+    std::cout 
     std::cout << "Starting monoslam_exec" << std::endl;
 
     std::ofstream ofile;

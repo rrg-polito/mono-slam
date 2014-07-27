@@ -1,6 +1,5 @@
 #include "camModel.hpp"
 
-
 void CamModel::setParam(camConfig camParams) {
     fx = camParams.fx;
     fy = camParams.fy;
@@ -11,7 +10,6 @@ void CamModel::setParam(camConfig camParams) {
     k3 = camParams.k3;
     p1 = camParams.p1;
     p2 = camParams.p2;
-
 }
 
 
@@ -40,7 +38,6 @@ Matrix2f CamModel::diff_distort_undistort(Vector2f hn) {
 
     Matrix2f Jacobian_Distort_Undistort = l*Matrix2f::Identity() + 2*f*hn*hn.transpose() + 2*pv*hn_contr.transpose() + 2*pv_contr*hn.transpose() + 4*j_matrix;
     return Jacobian_Distort_Undistort;
-
 }
 
 
@@ -95,7 +92,7 @@ Vector2f CamModel::projectAndDistort(Vector3f h, MatrixXf &J) {
 
 
     Vector2f hd;
-    hd << fx*x2 + u0, fy*y2 + v0; 
+    hd << fx*x2 + u0, fy*y2 + v0;
 
     MatrixXf Jacobian_Pixel_Retina(2,2);
     Jacobian_Pixel_Retina << fx, 0, 0, fy;
@@ -191,6 +188,3 @@ Vector3f CamModel::UndistortAndDeproject(Vector2f hd, MatrixXf &J){
 
     return hC;
 }
-
-
-
