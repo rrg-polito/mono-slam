@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Politecnico di Torino
+   Copyright (C) 2014 Politecnico di Torino
 
 
     This program is free software; you can redistribute it and/or modify
@@ -29,9 +29,6 @@
 
 
 #include <opencv2/opencv.hpp>
-
-// Input: parametri del kernel (parametri predetti da kalman)
-// Output: kernel stimato
 
 // This function is to evaluate the kernel
 // (the smallest one possible inferable from EKF)
