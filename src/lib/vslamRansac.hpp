@@ -23,20 +23,83 @@
 #define DEBUG
 
 #include <opencv2/opencv.hpp>
-#include "camModel.hpp"
-
-#include "Patch.hpp"
-
 #include <eigen3/Eigen/Dense>
 
+#include "camModel.hpp"
+#include "Patch.hpp"
 #include "ConfigVSLAM.h"
 
 
 
+/// \brief VSlam filter Class
+/// This class incapsulates all the information required to run the filter.
+///
 class VSlamFilter {
+
+    public:
+    /// \brief Filter Contructor
+    /// 
+    /// This function initializes the filter
+    /// 
+    /// 
+    /// 
+    /// \param file Configuration file of the fiter
+    VSlamFilter(char *file = NULL);
+
+
+    /// \brief Process a new frame
+    /// 
+    /// The function processes a new available frame and 
+    /// performs filter prediction and update
+    /// 
+    /// \param frame The new frame
+    /// \param time_stamp The timestamp of the captured frame
+    void processNewFrame(cv::Mat frame, double time_stamp);
+
+
+    /// \brief return the actual state of the filter
+    /// 
+    /// This function return the frame of the filter, i.e., camera pose 
+    /// (position and orientation) and velocities (linear and angular)
+    /// 
+    /// \return the camera state
+    VectorXf getState();
+
+
+
+
+    void captureNewFrame(cv::Mat newFrame, double time_stamp);
+
+    void drawPrediction();
+
+    float feature_index;
+
+    int addFeature(cv::Point2f pf);
+
+    void removeFeature(int index);
+
+    void predict(float v_x = 0, float w_z = 0);
+    void update(float v_x = 0, float w_z = 0);
+
+
+
+    void captureNewFrame(cv::Mat newFrame);
+    cv::Mat returnImageDrawed();
+
+
+    void findNewFeatures(int num = -1);
+
+    void convert2XYZ(int index);
+    void findFeaturesConvertible2XYZ();
+    Vector3f depth2XYZ(VectorXf f, MatrixXf &J);
+
+    int numOfFeatures();
+
+
+    private:
     CamModel cam;
-    
-	float dT;
+
+    float dT;
 
     MatrixXf Vmax; //Covariance of speed (linear and rotation)
 
@@ -48,17 +111,17 @@ class VSlamFilter {
     VectorXf tot_h_out;
 
     MatrixXf St; // innovation covariance matrix
-    
-    
-    
+
+
+
     cv::Mat frame, old_frame;
     cv::Mat originalImg;
     cv::Mat drawedImg;
-    
-    
+
+
     void drawUpdate(cv::Point f);
-    
-protected:
+
+    protected:
     float map_scale; // scale of the map
 
     std::vector<Patch> patches;
@@ -66,61 +129,28 @@ protected:
 
     VectorXf mu;
     MatrixXf Sigma;
-	int nFeatures;
+    int nFeatures;
     float T_camera;
     ConfigVSLAM config;
-	
+
 
     int windowsSize;
     int sigma_pixel;
     int sigma_pixel_2;
 
-	int kernel_min_size;
-	int scale;
-	int sigma_size;
+    int kernel_min_size;
+    int scale;
+    int sigma_size;
 
-	int nInitFeatures;
+    int nInitFeatures;
 
-	int camera_state_dim;
+    int camera_state_dim;
 
-	float vz_odom;
-	MatrixXf Hvz_odom;
-	
-	
-	double old_ts;
-
-	
-public:
+    float vz_odom;
+    MatrixXf Hvz_odom;
 
 
-    void drawPrediction();
-
-	float feature_index;
-
-    VSlamFilter(char *file = NULL);
-    int addFeature(cv::Point2f pf);
-
-    void removeFeature(int index);
-
-    void predict(float v_x = 0, float w_z = 0);
-    void update(float v_x = 0, float w_z = 0);
-    
-    
-    void captureNewFrame(cv::Mat newFrame);
-    void captureNewFrame(cv::Mat newFrame, double time_stamp);
-    
-    cv::Mat returnImageDrawed();
-    
-    VectorXf getState();
-    
-    void findNewFeatures(int num = -1);
-
-    void convert2XYZ(int index);
-    void findFeaturesConvertible2XYZ();
-    Vector3f depth2XYZ(VectorXf f, MatrixXf &J);
-
-    int numOfFeatures();
-    void processNewFrame(cv::Mat frame, double time_stamp);
+    double old_ts;
 
 
 };
