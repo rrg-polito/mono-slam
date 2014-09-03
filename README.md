@@ -6,6 +6,10 @@ MonoSLAM implementation in ROS
 This package is in beta version.
 
 
+INSTALLATION
+============
+
+Required OpenCV2.4.x and LibConfig++1.9.x
 
 
 

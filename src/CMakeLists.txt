@@ -25,10 +25,10 @@ add_library(monoslam
     lib/vslamRansac.cpp
     )
 
-target_link_libraries (monoslam ${OpenCV_LIBS} ${LIBCONFIG_LIBRARY} /usr/local/lib/libconfig++.a)
+target_link_libraries (monoslam ${OpenCV_LIBS} ${LIBCONFIG++_LIBRARY})
 
 add_executable(test
     examples/test.cpp
     )
 
-target_link_libraries (test monoslam ${OpenCV_LIBS} ${LIBCONFIG_LIBRARY} /usr/local/lib/libconfig++.a)
+target_link_libraries (test monoslam ${OpenCV_LIBS} ${LIBCONFIG++_LIBRARY})
