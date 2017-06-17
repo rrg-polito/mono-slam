@@ -1,6 +1,6 @@
 # MonoSlam Implementation in ROS
 
-This is code coming out from the M.Sc. Thesis of (Ludovico O. Russo)[https://github.com/ludusrusso]
+This is code coming out from the M.Sc. Thesis of [Ludovico O. Russo](https://github.com/ludusrusso)
 in the 2013.
 
 Reference: Russo L.O., Rosa S., Bona B., Matteucci M., "A ROS IMPLEMENTATION OF THE MONO-SLAM ALGORITHM",
