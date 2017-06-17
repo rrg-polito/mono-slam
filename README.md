@@ -18,6 +18,8 @@ $ rosrun mono-slam mono-slam configuration.cfg /image:=/your_image_topic
   and camera calibration.
   Sample configuration files are provided in the "conf" folder
 
-## Examples videos
+## Example videos
 
  - https://www.youtube.com/watch?v=Cf0iKfhnyu4
+ - https://www.youtube.com/watch?v=Jjmm9yZY3kA
+ - https://www.youtube.com/watch?v=ANNwb4NqlIM
