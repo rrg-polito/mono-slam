@@ -1,6 +1,6 @@
 # Mono-Slam Implementation in ROS
 
-This repository implements the mono-slam algorithm first introduced by [Davide Davison](https://www.doc.ic.ac.uk/~ajd/Publications/davison_etal_pami2007.pdf),
+This repository implements the mono-slam algorithm first introduced by [Andrew Davison](https://www.doc.ic.ac.uk/~ajd/Publications/davison_etal_pami2007.pdf),
 and is the final outcome of the M.Sc. Thesis of [Ludovico O. Russo](https://github.com/ludusrusso)
 in the 2013.
 
