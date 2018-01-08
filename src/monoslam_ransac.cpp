@@ -152,7 +152,7 @@ public:
 		slam.captureNewFrame(cv_ptr->image, msg->header.stamp.toSec());
 
 
-
+		// add your control input here if there's any
 		slam.predict();
 		slam.update();
 		
@@ -176,10 +176,10 @@ public:
 	cv_ptr->image = frame;
     image_pub_.publish(cv_ptr->toImageMsg());
 
+	/*
     char name[100];
     static int num = 0;
 
-    /*
     	sprintf(name, "frame%03d.jpg", num++);
     	cv::imwrite(name, frame);
     */

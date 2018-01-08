@@ -38,7 +38,7 @@ ConfigVSLAM::ConfigVSLAM(char *file) {
 	
 	scale = 1;
 
-	T_camera = 0.5f;
+	T_camera = 0.5f;// unknown till now??
 
 	sigma_size = 2;
 
@@ -57,6 +57,7 @@ ConfigVSLAM::ConfigVSLAM(char *file) {
 
 		Config cfg;
 		bool flag;
+		cout << "This is in ConfigVSLAM Modified by Yasin" << file << endl;
 		cout << "Opening configuration File " << file << endl;
 
 		cfg.readFile(file);

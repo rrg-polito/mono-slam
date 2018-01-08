@@ -7,18 +7,35 @@
 
 float computeCorrelation(cv::Mat f1, cv::Mat f2);
 
+// TODO: put the parameter in other place..
+// what if many comparing evaluate to bigger than 0.8
+// that means it's  not optimal so..
+float patch_matching_threshold = 0.8;
 
 void Patch::blurTest(const Vector2f &p1, const  Vector2f &p2, int kernel_min_size, int iName, int deltaT) {
+	/*
+		this function sound for debugging porposes , for it shows and save th blured_patch
+		we could enhanse this by creating a whole debug mode or interface 
+		and showing both the original and blured patch beside each other.
+	*/
+	/*
+		TODO: no need to image write , 
+		it test values for T_camera , to better match the real blurring effect
 
+	*/
 
 	cv::Mat blurredPatch;
 	if ((p1-p2).norm() > kernel_min_size) {
+		// patch is global
 		blurredPatch = blurPatch(patch, cv::Point2f(p1(0), p1(1)), cv::Point2f(p2(0), p2(1))).clone();
 	} else {
 		blurredPatch = patch.clone();
 	}
 
 	char name[100];
+	/* are there any string ways instead of arrays of chars
+		imgCounter is only for blurTest..
+	*/
 	sprintf(name, "%04d-%02d-%03d.jpg", imgCounter++, iName, deltaT);
 	std::cout << name << std::endl;
 
@@ -37,6 +54,7 @@ void Patch::blur(const Vector2f &p1, const  Vector2f &p2, int kernel_min_size) {
 		matching_patch = patch.clone();
 	}
 }
+
 
 void Patch::deblur(const Vector2f &p1, const  Vector2f &p2) {
 	patch = deblurPatch(patch, cv::Point2f(p1(0), p1(1)), cv::Point2f(p2(0), p2(1)));
@@ -58,6 +76,7 @@ void Patch::convertInXYZ() {
 
 Patch::Patch(const cv::Mat &p, cv::Point2f c, int position) {
 	numMatch = 1;
+	// where it's used and misMatch, and for what??
 	numMismatch = 0;
 	n_tot = 1;
 	n_find = 1;
@@ -75,7 +94,7 @@ Patch::Patch(const cv::Mat &p, cv::Point2f c, int position) {
 	coding = INV;
 	position_in_state = position;
 
-	 imgCounter = 0;
+	imgCounter = 0;
 
 }
 
@@ -112,19 +131,18 @@ void Patch::setIsInLi(bool flag){
 	isInLi = flag;
 }
 
+// useless
 void Patch::ConfirmIsInLi(){
 	isInLiDef = isInLi;
 }
 
-void Patch::update_quality_index() {
-	
-	float lambda = 0.95;
-	float mu = 0.5;
+void Patch::update_quality_index(float matching_ratio = 0.2) {
+
 	if (this->patchIsInHi() || this->patchIsInLi()) n_find++;
 
 	quality_index = (float)(n_tot - n_find)/((float)n_find);
 
-	if (quality_index > 0.2) this->setRemove();
+	if (quality_index > matching_ratio) this->setRemove();
 }
 
 
@@ -144,7 +162,8 @@ void Patch::setIsInHi(bool flag) {
 	numMismatch = 0.9*numMismatch;
 	*/
 	
-	
+	// ransac index seems useless!
+
 	if(!isInHi) ransac_index = 0.5;
 	else {
 		ransac_index = 0;
@@ -174,6 +193,7 @@ void Patch::drawUpdate(cv::Mat &img, int index) {
 	//std::cout << "feature " << index << "is in innovation = " << this->patchIsInInnovation() << std::endl;
 
 	if (!this->patchIsInInnovation()) return;
+	// draw only how match correctly!
 	int windowSize = patch.cols;
     cv::rectangle(img, cv::Point(z(0) - windowSize/2, z(1) - windowSize/2), cv::Point(z(0) + windowSize/2, z(1) + windowSize/2), CV_RGB(0,0,255), 1);
     //cv::Rect roi = cv::Rect(z(0) - windowSize/2, z(1) - windowSize/2, windowSize, windowSize);
@@ -207,16 +227,16 @@ bool Patch::findMatch(cv::Mat frame, MatrixXf covarianceMatrix, float sigma_size
 
     float max = -1;
     
-    float max_no_blurr = -1;
-
     float sigma_2 = sigma_size*sigma_size;
     
     float delta_u = sigma_size*sqrt((double)covarianceMatrix(0,0));
     float delta_v = sigma_size*sqrt((double)covarianceMatrix(1,1));
+
+	// not more than 20*20 pixel even if covariance bigger
     if (delta_u > 20) delta_u = 20;
     if (delta_v > 20) delta_v = 20;
 
-    float newmax, new_max_no_blurr;
+    float newmax;
     for (int i = uc - delta_u; i <= uc + delta_u; i++) {
         for (int j = vc - delta_v; j <= vc + delta_v; j++) {
             if (i > windowSize/2 && j > windowSize/2 && i < frame.size().width - windowSize/2 && j < frame.size().height - windowSize/2) {
@@ -236,12 +256,12 @@ bool Patch::findMatch(cv::Mat frame, MatrixXf covarianceMatrix, float sigma_size
     }
     
     this->matched_patch_blur = newPatch;
-
+	// TODO : is the patch should update to latest frame to better matching
     if (showimg_flag) {
 		cv::Mat img;
 		hconcat(this->patch, this->matching_patch, img);
 		hconcat(img, this->matched_patch_blur, img);
-		imshow("Blurring", img);
+		cv::imshow("Blurring", img);
 		char name[100];
 		sprintf(name, "blur%03d.jpg",imgn++);
 		cv::imwrite(name, img);
@@ -251,7 +271,7 @@ bool Patch::findMatch(cv::Mat frame, MatrixXf covarianceMatrix, float sigma_size
 
 
 
-    if (max < 0.8) {
+    if (max < patch_matching_threshold) {
         this->center = cv::Point2f(-1,-1);
         this->founded = false;
         this->setIsInInnovation(false);
@@ -268,6 +288,9 @@ bool Patch::findMatch(cv::Mat frame, MatrixXf covarianceMatrix, float sigma_size
 
 float computeCorrelation(cv::Mat f1, cv::Mat f2) {
 
+
+	// TODO: search for faster or more adequte functions
+	// built-in opencv, ...
 	int step = 1;
 
     double m1 = 0, m2 = 0, n1 = 0, n2 = 0;

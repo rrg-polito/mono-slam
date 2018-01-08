@@ -15,7 +15,6 @@
 #include <eigen3/Eigen/Dense>
 using namespace Eigen;
 
-
 class RosVSLAM : public VSlamFilter
 {
 private:
@@ -30,10 +29,9 @@ public:
 	visualization_msgs::MarkerArray getFeatures();
 	visualization_msgs::MarkerArray ActualCameraRepr();
 
-	void predict(float v_x = 0, float w_z = 0);
+	void predict(Vector3f Translation_Speed_Control = Vector3f::Zero(), Vector3f Rotational_Speed_Control = Vector3f::Zero());
 	void update(float v_x = 0, float w_z = 0);
 	nav_msgs::Path getCameraPath();
 	nav_msgs::Odometry getVisualOdometry(ros::Time stamp);
 };
-
 
