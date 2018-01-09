@@ -7,7 +7,10 @@ in the 2013.
 [Reference: Russo L.O., Rosa S., Bona B., Matteucci M., "A ROS implementation of the mono-slam algorithm",
 International Journal of Computer Science & Information Technology, Vol. 6 Issue 1, p339](https://www.researchgate.net/publication/269200654_A_ROS_Implementation_of_the_Mono-Slam_Algorithm)
 
-*Note:* for some of the jacobian calculation there's a Jupyter notebook explain the result with the use of **Sympy** , to confirm the resulting formula, [here](https://github.com/engyasin/mono-slam/blob/master/reference/Sympy_monoslam_jacobians_1.ipynb)
+*Notes:*
+- for some of the jacobian calculation there's a Jupyter notebook explain the result with the use of **Sympy** , to confirm the resulting formula, [here](https://github.com/engyasin/mono-slam/blob/master/reference/Sympy_monoslam_jacobians_1.ipynb)
+
+- Tested with Ros-Kinetic 
 ## Usage:
 
 ```bash
