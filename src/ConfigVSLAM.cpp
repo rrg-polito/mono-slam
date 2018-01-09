@@ -57,7 +57,7 @@ ConfigVSLAM::ConfigVSLAM(char *file) {
 
 		Config cfg;
 		bool flag;
-		cout << "This is in ConfigVSLAM Modified by Yasin" << file << endl;
+		cout << "This is in ConfigVSLAM (Modified by Yasin) " << file << endl;
 		cout << "Opening configuration File " << file << endl;
 
 		cfg.readFile(file);

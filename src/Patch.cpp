@@ -136,7 +136,7 @@ void Patch::ConfirmIsInLi(){
 	isInLiDef = isInLi;
 }
 
-void Patch::update_quality_index(float matching_ratio = 0.2) {
+void Patch::update_quality_index(float matching_ratio) {
 
 	if (this->patchIsInHi() || this->patchIsInLi()) n_find++;
 

@@ -42,7 +42,7 @@ void RosVSLAM::updatePath() {
 }
 
 void RosVSLAM::predict(Vector3f Translation_Speed_Control, Vector3f Rotational_Speed_Control) {
-	this->VSlamFilter::predict(Vector3f Translation_Speed_Control, Vector3f Rotational_Speed_Control);
+	this->VSlamFilter::predict(Translation_Speed_Control, Rotational_Speed_Control);
 	this->updatePath();
 }
 

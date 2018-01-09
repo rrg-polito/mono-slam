@@ -129,7 +129,7 @@ VectorXf VSlamFilter::getState() {
 	VectorXf system_state(STATE_DIM);
 	system_state = mu.segment<STATE_DIM>(0);
 
-    return state;
+    return system_state;
 }
 
 VSlamFilter::VSlamFilter(char *file) : config(file) {
@@ -201,7 +201,7 @@ int VSlamFilter::addFeature(cv::Point2f pf) {
     Vector2f hd;
     hd << (float)pf.x, (float)pf.y;
 
-    if isInsideImage(hd,frame.size(),windowsSize) {
+    if(isInsideImage(hd,frame.size(),windowsSize)) {
 
     	int pos = mu.size();
         Patch newPat(cv::Mat(frame, cv::Rect(pf.x-windowsSize/2, pf.y-windowsSize/2, windowsSize,windowsSize)), pf, pos);
@@ -241,9 +241,9 @@ int VSlamFilter::addFeature(cv::Point2f pf) {
 		
 		
         MatrixXf Jacobain_feature_to_hW = Jacobain_inv_feature_to_hW(hW);//what it does d_f_d_hW
-        MatrixXf Jacobian_hW_to_qantrion = Jacobian_hW_to_qantrion(q,hC);
+        MatrixXf Jacobian_hW_2q = Jacobian_hW_to_qantrion(q,hC);
 
-        Js.block<6,4>(nOld,3) = Jacobain_feature_to_hW*Jacobian_hW_to_qantrion;
+        Js.block<6,4>(nOld,3) = Jacobain_feature_to_hW*Jacobian_hW_2q;
         Js.block<6,2>(nOld,nOld) = Jacobain_feature_to_hW*Rot*Jacobian_3dpointto_2dpoint;
         Js.block<6,1>(nOld, nOld+2) << 0,0,0,0,0,1;
 
@@ -265,18 +265,25 @@ void VSlamFilter::removeFeature(int index) {
     int pos = p.position_in_state;
 
     int first = pos;
-    
-    int size = (p.isXYZ()?3:6);
+	int psize;
+	VectorXf feature;
+    if(p.isXYZ()){
+		psize = 3;
+		feature = mu.segment<3>(pos);
+	}else{
+		psize = 6;
+		feature = mu.segment<6>(pos);
+	}
 
     // a segment to save good features
     if (p.n_find > 5) {
 		MatrixXf J;
-        p.XYZ_pos = inverseDepth2XyzWorld(mu.segment<size>(pos),J,0);
+        p.XYZ_pos = inverseDepth2XyzWorld(feature,J,0);
 	    deleted_patches.push_back(p);// could be used for loop closing
     }
     //end of segment
 
-    int last = mu.rows() - pos - size;// read like [-1*last] in python
+    int last = mu.rows() - pos - psize;// read like [-1*last] in python
 
     if (index != patches.size() - 1) {
         mu = Concat(mu.head(first), mu.tail(last));
@@ -288,7 +295,7 @@ void VSlamFilter::removeFeature(int index) {
     }
 
     for(int i = index + 1; i < patches.size(); i++) {
-    	patches[i].change_position(-size);
+    	patches[i].change_position(-psize);
     }
     patches.erase(patches.begin()+index);
 }
@@ -462,9 +469,10 @@ Vector3f VSlamFilter::inverseDepth2XyzWorld(VectorXf f, MatrixXf &J ,int compute
 
         Vector3f y = f.segment<3>(0) + m/ro;
 
-        if(compute_Jacobian == 2) {
+        if(compute_Jacobian > 1) {
             // calculate L_d : lineraty index:
             Vector3f d = y - mu.segment<3>(0);
+			int pos = compute_Jacobian-2;
             float sigma_rho = Sigma(pos+5,pos+5);
             float t = d.transpose()*m;
             float L_d = 4*sigma_rho*abs(t)/(ro*ro*d.squaredNorm());
@@ -494,7 +502,7 @@ void VSlamFilter::convert2XYZ_ifLinear(int index) {
 	int pos = patches[index].position_in_state;
 	VectorXf f = mu.segment<6>(pos);
     MatrixXf J_hp_f = MatrixXf::Zero(3,6);
-    Vector3f y = inverseDepth2XyzWorld( f, J_hp_f, 2);
+    Vector3f y = inverseDepth2XyzWorld( f, J_hp_f, 2+pos);
 
     if(J_hp_f(0,0) == 1){
         int first = pos;
@@ -787,12 +795,11 @@ void VSlamFilter::update(float v_x, float w_z) {
 
 
 	bool flag_correction = false;
-	
+	Matrix3f corr_ass_sigma = 0.00001*Matrix3f::Identity();
 // what forsPlane do exactly ... defult zero
 // seems adding 3pt data to z and H , and covariance to small value , 
 // why?
 	if (config.forsePlane) {
-        Matrix3f corr_ass_sigma = 0.00001*Matrix3f::Identity();
 		Vector3f corr_ass = Vector3f::Zero();
 		MatrixXf corr_ass_H = MatrixXf::Zero(3,mu_tmp.size());
 		corr_ass_H(0,1) = 1;
@@ -816,7 +823,7 @@ void VSlamFilter::update(float v_x, float w_z) {
 
     	MatrixXf St_error = sigma_pixel_2*MatrixXf::Identity(p,p);
     	//if (flag_odom) St_error(p-1,p-1) = 0.2;
-    	if (flag_correction) St_error.block<3,3>(p-3,p-3) = corr_ass_sigma;
+    	if (flag_correction){St_error.block<3,3>(p-3,p-3) = corr_ass_sigma;}
 
     	St += St_error;
 
