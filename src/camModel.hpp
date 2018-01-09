@@ -14,7 +14,7 @@ typedef struct _camConfig_ {
 using namespace Eigen;
 
 class CamModel {
-    float fx, fy;
+    float fx, fy;// in pixel dim
     float u0, v0;
     float k1, k2, k3, p1, p2;
     

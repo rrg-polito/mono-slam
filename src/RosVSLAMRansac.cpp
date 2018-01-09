@@ -1,14 +1,13 @@
 #include "RosVSLAMRansac.hpp"
 #include <sstream>
 #include <geometry_msgs/PoseStamped.h>
-#include <nav_msgs/Odometry.h>
-
 
  // #define DRAW_COV
 
 
 RosVSLAM::RosVSLAM(char *file): VSlamFilter(file) {
 	this->cameraPath.header.frame_id = "/world";
+	//TODO: make it detect is it world or map automaticlly
 	this->cameraPath.header.stamp = ros::Time::now();
 }
 
@@ -42,8 +41,8 @@ void RosVSLAM::updatePath() {
 	this->cameraPath.poses.push_back(pose);
 }
 
-void RosVSLAM::predict(float v_x, float w_z) {
-	this->VSlamFilter::predict();
+void RosVSLAM::predict(Vector3f Translation_Speed_Control, Vector3f Rotational_Speed_Control) {
+	this->VSlamFilter::predict(Translation_Speed_Control, Rotational_Speed_Control);
 	this->updatePath();
 }
 
@@ -85,6 +84,7 @@ visualization_msgs::MarkerArray RosVSLAM::ActualCameraRepr() {
 
 	visualization_msgs::Marker camera_marker;
 	camera_marker.header.frame_id = "/world";
+	//here also TODO
 	camera_marker.header.stamp = ros::Time::now();
 	camera_marker.ns  = "camera_marker";
 	camera_marker.type = visualization_msgs::Marker::MESH_RESOURCE;
@@ -175,7 +175,7 @@ visualization_msgs::MarkerArray RosVSLAM::getFeatures() {
 		Matrix3f Cov;
 		if (!patches[i].isXYZ()) {
 			MatrixXf Jf;
-			d = depth2XYZ(mu.segment<6>(pos), Jf);
+			d = inverseDepth2XyzWorld(mu.segment<6>(pos), Jf , 1);
 			geometry_msgs::Point p;
 			p.x = d(0)*map_scale;
 			p.y = d(1)*map_scale;
@@ -252,6 +252,7 @@ visualization_msgs::MarkerArray RosVSLAM::getFeatures() {
 	        pointsXYZ.lifetime.sec = 1;
 	    	//points.markers.push_back(pointsXYZ);
 
+			// useless!
 	        visualization_msgs::Marker textpointsXYZ;
 	        textpointsXYZ.header.frame_id = "/world";
 	        textpointsXYZ.header.stamp = ros::Time::now();
@@ -316,7 +317,7 @@ visualization_msgs::MarkerArray RosVSLAM::getFeatures() {
 
 
 
-	std::cout << "size = " <<deleted_patches.size() << std::endl;
+	std::cout << "size of past points= " <<deleted_patches.size() << std::endl;
 	if (deleted_patches.size() > 1000) {
 		for (int i = 0; i < deleted_patches.size(); i++) {
 			sprintf(name, "OLD_points%d", count_OLD++);
