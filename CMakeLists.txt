@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "-O2 -msse4 -DEIGEN_NO_DEBUG -DNDEBUG")
 
 find_package(catkin REQUIRED COMPONENTS cv_bridge tf sensor_msgs cv_bridge roscpp std_msgs image_transport)
 find_package(OpenCV REQUIRED)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -61,7 +62,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(src ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp library
 # add_library(mono_slam
@@ -97,7 +98,7 @@ add_executable(mono-slam
 ## Specify libraries to link a library or executable target against
  #target_link_libraries(ludoslam ${catkin_LIBRARIES})
  
- target_link_libraries(mono-slam ${catkin_LIBRARIES} config++)
+ target_link_libraries(mono-slam ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} config++)
 
 #############
 ## Install ##
