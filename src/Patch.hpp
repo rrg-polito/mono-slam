@@ -11,7 +11,9 @@
 #define INV false
 
 #define USE_RANSAC
-
+//USE_RANSAC is for dubug without ransac if omited (or with if like this , included 
+// should be deleted because it's default.
+// also the coresponding code for ifndef in vslamransac
 
 using namespace Eigen;
 
@@ -25,18 +27,18 @@ protected:
 	bool isInLiDef;
 	bool isInHi;
 	bool removeFlag;
-	bool ransacFlag;
+	bool ransacFlag;// Patch requires ransac to be done if true , or ignore ransac on it
 	
 	float quality_index;
 	float ransac_index;
 	
 
 public:
-	int position_in_z;
+	int position_in_z;// useful for patch covariiance extraction from S as it indicate covariance for x,y
 	int n_tot, n_find;
 
 
-	void update_quality_index();
+	void update_quality_index(float matching_ratio = 0.2);
 	float get_quality_index();
 
 	void setIsInInnovation(bool flag);
@@ -64,7 +66,7 @@ public:
 	int position_in_state;
 	bool coding;
 
-    MatrixXd mPatch;
+    MatrixXd mPatch;// wtf;
 
     cv::Mat patch;
     cv::Mat matching_patch;
@@ -100,7 +102,7 @@ public:
 	bool isXYZ();
 	void convertInXYZ();
 
-	 int imgCounter;
+	int imgCounter;
 
 };
 

@@ -30,7 +30,8 @@ cv::Mat evaluateKernel(cv::Point2f one, cv::Point2f two) {
 
     int x0 = (s < 0 ? -s*length: 0);
     int y0 = (c < 0 ? -c*length: 0);
-
+	/* to make the indexes positive..
+	*/
 
 	for(int i=0; i<length; ++i) {
         int x = i*s + x0;
@@ -54,6 +55,7 @@ cv::Mat evaluateKernel(cv::Point2f one, cv::Point2f two) {
 // (the smallest one possible inferable from EKF)
 
 cv::Mat blurPatch(const cv::Mat &_patch, cv::Point2f one, cv::Point2f two) {
+	// what the use of the follwing line
     cv::Mat blurredWindow = _patch.clone();
     //std::cout << "Start Blurring" << std::endl;
 
@@ -66,8 +68,9 @@ cv::Mat blurPatch(const cv::Mat &_patch, cv::Point2f one, cv::Point2f two) {
 
 	int delta = 0, ddepth = -1;
 	filter2D(patch, patch, ddepth, kernel, anchor, delta, cv::BORDER_DEFAULT);
-
+    // TODO: border-style-effect-study;
     patch.convertTo(patch, CV_8U);
+	// code for optimaizing and testing the blur result
     //std::cout << "Stop Blurring" << std::endl;
 
   //  hconcat(blurredWindow, patch, blurredWindow);
@@ -108,7 +111,7 @@ cv::Mat deblurPatch(const cv::Mat &_patch, cv::Point2f one, cv::Point2f two) {
 	cv::Point2f anchor = cv::Point( -1, -1 );
 	int delta = 0, ddepth = -1;
 
-    double eps = DBL_MIN;
+    double eps = DBL_MIN;//what that for!
 	for(int l=0; l<maxIter; l++) {
 
 		//Improvement
@@ -146,7 +149,6 @@ cv::Mat deblurPatch(const cv::Mat &_patch, cv::Point2f one, cv::Point2f two) {
 				result.at<double>(i,j) = result.at<double>(i,j) * error_est.at<double>(i,j);
             }
 	}
-
 
 
     result.convertTo(result, CV_8U);

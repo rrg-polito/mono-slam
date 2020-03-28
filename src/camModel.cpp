@@ -17,11 +17,13 @@ void CamModel::setParam(camConfig camParams) {
 
 Matrix2f CamModel::diff_distort_undistort(Vector2f hn) {
 
-	const float u = hn(0);
-	const float v = hn(1);
+
+//  to compute jacobian of distoration and inverse if undistoration
+//  matched with sympy[OK]
+//  Jacobian of normalized hn to the function of distoration 
 
 	const float r_2 = hn(0)*hn(0) + hn(1)*hn(1);
-	const float l = 1 + k1*r_2 + k2*r_2*r_2 + k3*r_2*r_2*r_2;
+	const float Lrn = 1 + k1*r_2 + k2*r_2*r_2 + k3*r_2*r_2*r_2;
 
 	Vector2f hn_contr;
     hn_contr << hn(1),hn(0);
@@ -35,10 +37,11 @@ Matrix2f CamModel::diff_distort_undistort(Vector2f hn) {
     Matrix2f j_matrix;
     j_matrix << p2*hn(0), 0, 0, p1*hn(1);
 
-
     const float f = k1 + 2*k2*r_2 + 3*k3*r_2*r_2;
 
-    Matrix2f Jacobian_Distort_Undistort = l*Matrix2f::Identity() + 2*f*hn*hn.transpose() + 2*pv*hn_contr.transpose() + 2*pv_contr*hn.transpose() + 4*j_matrix;
+    Matrix2f Jacobian_Distort_Undistort = Lrn*Matrix2f::Identity() + 2*f*hn*hn.transpose() +
+                                          2*pv*hn_contr.transpose() + 2*pv_contr*hn.transpose() +
+                                          4*j_matrix;
     return Jacobian_Distort_Undistort;
 
 }
@@ -63,11 +66,11 @@ CamModel::CamModel(float _fx, float _fy, float _u0, float _v0, float _k1, float 
 
 
 Vector2f CamModel::projectAndDistort(Vector3f h, MatrixXf &J) {
-    
+
+    // Note: here f is 1 and used fx, fy = 1/dx;1/dy 
     float x = h(0);
     float y = h(1);
     float z = h(2);
-    
     
     // Compute point retina undistor
     float inv_z = 1/z;
@@ -75,11 +78,10 @@ Vector2f CamModel::projectAndDistort(Vector3f h, MatrixXf &J) {
     float x1 = x/z;
     float y1 = y/z;
     
-    
-    
-    MatrixXf Jacobian_RetinaUnd_hC(2,3);
-    Jacobian_RetinaUnd_hC << 1/z, 0, -x/z/z, 0, 1/z, -y/z/z;
-    
+    MatrixXf Jacobian_normalized2_3d(2,3);
+    Jacobian_normalized2_3d << 1/z, 0, -x/z/z, 0, 1/z, -y/z/z;
+
+    // same as -x/(z**2) 
     // Compute point retina distort
 
     float r_2 = x1*x1+y1*y1;
@@ -93,19 +95,18 @@ Vector2f CamModel::projectAndDistort(Vector3f h, MatrixXf &J) {
     Vector2f hn;
     hn << x1,y1;
 
-    
     Vector2f hd;
     hd << fx*x2 + u0, fy*y2 + v0; 
 
-    MatrixXf Jacobian_Pixel_Retina(2,2);
-    Jacobian_Pixel_Retina << fx, 0, 0, fy;
+    MatrixXf Jacobian_Pixel_Retina_normalized(2,2);
+    Jacobian_Pixel_Retina_normalized << fx, 0, 0, fy;
     
     
     // ************************************ //
-        
-    J = Jacobian_Pixel_Retina*diff_distort_undistort(hn)*Jacobian_RetinaUnd_hC;
+    // jacobian of distoration multiply with jacob of project??
+    // TO SEARCH?    
+    J = Jacobian_Pixel_Retina_normalized*diff_distort_undistort(hn)*Jacobian_normalized2_3d;
     
-
     return hd;
 }
 
@@ -127,6 +128,7 @@ Vector2f CamModel::projectAndDistort(Vector3f h) {
 
     
     // Compute point retina distort
+    // same as matlab and opencv
 
     float r_2 = x1*x1+y1*y1;
     float l = 1 + k1*r_2 + k2*r_2*r_2 + k3*r_2*r_2*r_2;
@@ -147,8 +149,8 @@ Vector3f CamModel::UndistortAndDeproject(Vector2f hd, MatrixXf &J){
     float x2 = (hd(0) - u0)/fx;
     float y2 = (hd(1) - v0)/fy;
 
-    MatrixXf Jacobian_Retina_Pixel(2,2);
-    Jacobian_Retina_Pixel << 1/fx, 0, 0, 1/fy;
+    MatrixXf Jacobian_normalizedpoint_to_point(2,2);
+    Jacobian_normalizedpoint_to_point << 1/fx, 0, 0, 1/fy;
 
     // Compute retina undistort
     
@@ -164,6 +166,8 @@ Vector3f CamModel::UndistortAndDeproject(Vector2f hd, MatrixXf &J){
 
 
     int n_iter = 50;
+    // a param
+    // foe distorate correction
     for (int i = 0; i < n_iter; ++i) {
     	r_2 = x1*x1 + y1*y1;
     	l = 1 + k1*r_2 + k2*r_2*r_2 + k3*r_2*r_2*r_2;
@@ -183,11 +187,12 @@ Vector3f CamModel::UndistortAndDeproject(Vector2f hd, MatrixXf &J){
     Vector3f hC;
     hC << x1, y1, 1;
     
-    MatrixXf Jacobian_hC_RetinaUnd(3,2);
-    Jacobian_hC_RetinaUnd << 1, 0, 0, 1, 0, 0;
+    MatrixXf Jacobian_Unproject_to_point(3,2);
+    Jacobian_Unproject_to_point << 1, 0, 0, 1, 0, 0;
  
-    
-    J = Jacobian_hC_RetinaUnd*diff_distort_undistort(hn).inverse()*Jacobian_Retina_Pixel;
+    // jacobian of undistoration multiply with jacob of deproject??
+    // TO SEARCH?   
+    J = Jacobian_Unproject_to_point*diff_distort_undistort(hn).inverse()*Jacobian_normalizedpoint_to_point;
 
     return hC;
 }
